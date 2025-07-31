@@ -5,7 +5,7 @@ import { getCdnImageUrl } from '@/utils/utils';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { ActivityIndicator, Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import '../css/global.css';
 
 // 常量定义
@@ -38,7 +38,8 @@ const validateCode = (code: string): { isValid: boolean; message?: string } => {
 export default function LoginScreen() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [codeLoading, setCodeLoading] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { login } = useAuth();
@@ -88,7 +89,7 @@ export default function LoginScreen() {
       return;
     }
 
-    setLoading(true);
+    setLoginLoading(true);
     try {
       const response = await phoneLogin('', phoneNumber, verificationCode);
       
@@ -109,12 +110,12 @@ export default function LoginScreen() {
       console.error('登录错误:', error);
       showToast('登录时出错，请重试');
     } finally {
-      setLoading(false);
+      setLoginLoading(false);
     }
   }, [phoneNumber, verificationCode, login, showToast]);
 
   const handleWechatLogin = useCallback(async () => {
-    setLoading(true);
+    setLoginLoading(true);
     try {
       // TODO: 实现微信登录逻辑
       console.log('微信登录');
@@ -123,7 +124,7 @@ export default function LoginScreen() {
       console.error('微信登录错误:', error);
       showToast('微信登录时出错，请重试');
     } finally {
-      setLoading(false);
+      setLoginLoading(false);
     }
   }, [showToast]);
 
@@ -135,7 +136,7 @@ export default function LoginScreen() {
       return;
     }
     
-    setLoading(true);
+    setCodeLoading(true);
     try {
       const response = await sendVCode(phoneNumber);
       
@@ -149,7 +150,7 @@ export default function LoginScreen() {
       console.error('发送验证码错误:', error);
       showToast('验证码发送失败，请重试');
     } finally {
-      setLoading(false);
+      setCodeLoading(false);
     }
   }, [phoneNumber, showToast, startCountdown]);
 
@@ -213,20 +214,24 @@ export default function LoginScreen() {
                   </View>
                   <TouchableOpacity 
                     className={`px-4 py-4 rounded-xl border w-[100px] items-center justify-center ${
-                      countdown > 0 || loading 
+                      countdown > 0 || codeLoading 
                         ? 'bg-white/10 border-white/20' 
                         : 'bg-white/20 border-white/40'
                     }`}
                     onPress={handleGetVerificationCode}
-                    disabled={countdown > 0 || loading}
+                    disabled={countdown > 0 || codeLoading}
                   >
-                    <Text className={`text-xs font-medium text-center ${
-                      countdown > 0 || loading 
-                        ? 'text-white/50' 
-                        : 'text-white'
-                    }`}>
-                      {countdown > 0 ? `${countdown}s` : loading ? '发送中' : '获取验证码'}
-                    </Text>
+                    {codeLoading ? (
+                      <ActivityIndicator size="small" color="rgba(255,255,255,0.5)" />
+                    ) : (
+                      <Text className={`text-xs font-medium text-center ${
+                        countdown > 0 
+                          ? 'text-white/50' 
+                          : 'text-white'
+                      }`}>
+                        {countdown > 0 ? `${countdown}s` : '获取验证码'}
+                      </Text>
+                    )}
                   </TouchableOpacity>
                 </View>
               </View>
@@ -234,16 +239,19 @@ export default function LoginScreen() {
             {/* 登录按钮 */}
              <TouchableOpacity 
                onPress={handlePhoneLogin} 
-               disabled={loading}
              >
                <LinearGradient
-                 colors={loading ? ['#9CA3AF', '#9CA3AF'] : ['#3B82F6', '#8B5CF6']}
-                 className="w-full py-4 items-center mb-4"
+                 colors={['#3B82F6', '#8B5CF6'] }
+                 className="w-full py-4 h-[55px] items-center mb-4"
                  style={{borderRadius:8}}
                >
-                 <Text className="text-white text-base font-semibold">
-                   {loading ? '登录中...' : '立即登录'}
-                 </Text>
+                 {loginLoading ? (
+                   <ActivityIndicator size="small" color="white" />
+                 ) : (
+                   <Text className="text-white text-base font-semibold">
+                     立即登录
+                   </Text>
+                 )}
                </LinearGradient>
              </TouchableOpacity>
             
@@ -258,7 +266,7 @@ export default function LoginScreen() {
             <TouchableOpacity 
               className="w-full bg-white-500 py-4 rounded-xl items-center"
               onPress={handleWechatLogin} 
-              disabled={loading}
+              disabled={loginLoading}
             >
               <Image source={{uri: getCdnImageUrl('wechat_login_202507311538.png')}} className='w-[36px] h-[36px] rounded-full'/>
               {/* <Text className="text-white text-base font-semibold">
