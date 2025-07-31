@@ -6,7 +6,7 @@ import 'react-native-reanimated';
 
 import { useColorScheme } from '@/hooks/useColorScheme';
 import { AuthProvider } from '@/store/AuthContext';
-
+import '../css/global.css';
 export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({
