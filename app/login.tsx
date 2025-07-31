@@ -182,7 +182,7 @@ export default function LoginScreen() {
              <View className="mb-4">
                <Text className="text-white/90 text-sm font-medium mb-2">手机号</Text>
                <TextInput
-                 className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-4 text-base text-white outline-none"
+                 className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-base text-white outline-none"
                  placeholder="请输入手机号"
                  placeholderTextColor="rgba(255,255,255,0.6)"
                  value={phoneNumber}
@@ -200,7 +200,7 @@ export default function LoginScreen() {
                 <View className="w-full flex-row gap-3">
                   <View className="flex-1">
                     <TextInput
-                      className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-4 text-base text-white"
+                      className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-3 text-base text-white"
                       style={{ outline: 'none' }}
                       placeholder="请输入验证码"
                       placeholderTextColor="rgba(255,255,255,0.6)"
@@ -213,7 +213,7 @@ export default function LoginScreen() {
                     />
                   </View>
                   <TouchableOpacity 
-                    className={`px-4 py-4 rounded-xl border w-[100px] items-center justify-center ${
+                    className={`px-4 py-3 rounded-xl border w-[100px] items-center justify-center ${
                       countdown > 0 || codeLoading 
                         ? 'bg-white/10 border-white/20' 
                         : 'bg-white/20 border-white/40'
@@ -268,7 +268,7 @@ export default function LoginScreen() {
               onPress={handleWechatLogin} 
               disabled={loginLoading}
             >
-              <Image source={{uri: getCdnImageUrl('wechat_login_202507311538.png')}} className='w-[36px] h-[36px] rounded-full'/>
+              <Image source={{uri: getCdnImageUrl('wechat_login_202507311538.png')}} className='w-[35px] h-[35px] rounded-full'/>
               {/* <Text className="text-white text-base font-semibold">
                 {loading ? '登录中...' : '微信登录'}
               </Text> */}
