@@ -157,7 +157,7 @@ export default function LoginScreen() {
              <View className="mb-4">
                <Text className="text-white/90 text-sm font-medium mb-2">手机号</Text>
                <TextInput
-                 className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-4 text-base text-white"
+                 className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-4 text-base text-white outline-none"
                  placeholder="请输入手机号"
                  placeholderTextColor="rgba(255,255,255,0.6)"
                  value={phoneNumber}
@@ -176,6 +176,7 @@ export default function LoginScreen() {
                   <View className="flex-1">
                     <TextInput
                       className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-4 text-base text-white"
+                      style={{ outline: 'none' }}
                       placeholder="请输入验证码"
                       placeholderTextColor="rgba(255,255,255,0.6)"
                       value={verificationCode}
