@@ -1,10 +1,11 @@
 import { phoneLogin, sendVCode } from '@/api/login';
 import { useAuth } from '@/store/AuthContext';
+import { useToast } from '@/store/ToastContext';
 import { getCdnImageUrl } from '@/utils/utils';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import '../css/global.css';
 
 export default function LoginScreen() {
@@ -14,6 +15,7 @@ export default function LoginScreen() {
   const [countdown, setCountdown] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const { login } = useAuth();
+  const { showToast } = useToast();
 
   // 清理定时器
   useEffect(() => {
@@ -26,18 +28,18 @@ export default function LoginScreen() {
 
   const handlePhoneLogin = async () => {
     if (!phoneNumber.trim()) {
-      Alert.alert('错误', '请输入手机号');
+      showToast('请输入手机号');
       return;
     }
     if (!verificationCode.trim()) {
-      Alert.alert('错误', '请输入验证码');
+      showToast('请输入验证码');
       return;
     }
 
     // 简单的手机号格式验证
     const phoneRegex = /^1[3-9]\d{9}$/;
     if (!phoneRegex.test(phoneNumber)) {
-      Alert.alert('错误', '请输入正确的手机号格式');
+      showToast('请输入正确的手机号格式');
       return;
     }
 
@@ -52,18 +54,18 @@ export default function LoginScreen() {
         // 保存uguid到store
         if (response.data && response.data.uguid) {
           await login(response.data.uguid);
-          Alert.alert('登录成功', '欢迎使用AIFA!');
+          showToast('欢迎使用AIFA!');
           // 跳转到首页
           router.replace('/(tabs)');
         } else {
-          Alert.alert('登录失败', '服务器返回数据异常');
+          showToast('服务器返回数据异常');
         }
       } else {
-        Alert.alert('登录失败', response.message || '登录失败，请重试');
+        showToast(response.message || '登录失败，请重试');
       }
     } catch (error) {
       console.error('登录错误:', error);
-      Alert.alert('登录失败', '登录时出错，请重试');
+      showToast('登录时出错，请重试');
     } finally {
       setLoading(false);
     }
@@ -74,9 +76,9 @@ export default function LoginScreen() {
     try {
       // TODO: 实现微信登录逻辑
       console.log('微信登录');
-      Alert.alert('提示', '微信登录功能待实现');
+      showToast('微信登录功能待实现');  
     } catch (error) {
-      Alert.alert('登录失败', '登录时出错，请重试');
+      showToast('微信登录失败');
     } finally {
       setLoading(false);
     }
@@ -84,14 +86,14 @@ export default function LoginScreen() {
 
   const handleGetVerificationCode = async () => {
     if (!phoneNumber.trim()) {
-      Alert.alert('错误', '请先输入手机号');
+      showToast('请先输入手机号');
       return;
     }
     
     // 简单的手机号格式验证
     const phoneRegex = /^1[3-9]\d{9}$/;
     if (!phoneRegex.test(phoneNumber)) {
-      Alert.alert('错误', '请输入正确的手机号格式');
+      showToast('请输入正确的手机号格式');
       return;
     }
     
@@ -100,7 +102,7 @@ export default function LoginScreen() {
       const response = await sendVCode(phoneNumber);
       
       if (response.code === 1000) {
-        Alert.alert('提示', '验证码已发送到您的手机');
+        showToast('验证码已发送到您的手机');
         // 开始倒计时
         setCountdown(60);
         if (timerRef.current) {
@@ -119,11 +121,11 @@ export default function LoginScreen() {
           });
         }, 1000);
       } else {
-        Alert.alert('发送失败', response.message || '验证码发送失败，请重试');
+        showToast(response.message || '验证码发送失败，请重试');
       }
     } catch (error) {
       console.error('发送验证码错误:', error);
-      Alert.alert('发送失败', '验证码发送失败，请重试');
+      showToast('验证码发送失败，请重试');
     } finally {
       setLoading(false);
     }
