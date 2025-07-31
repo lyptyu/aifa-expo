@@ -1,10 +1,10 @@
+import { phoneLogin, sendVCode } from '@/api/login';
+import { useAuth } from '@/store/AuthContext';
+import { getCdnImageUrl } from '@/utils/utils';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
 import { Alert, Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
-
-import { phoneLogin, sendVCode } from '@/api/login';
-import { useAuth } from '@/store/AuthContext';
 import '../css/global.css';
 
 export default function LoginScreen() {
@@ -232,13 +232,14 @@ export default function LoginScreen() {
             
             {/* 微信登录 */}
             <TouchableOpacity 
-              className="w-full bg-green-500 py-4 rounded-xl items-center"
+              className="w-full bg-white-500 py-4 rounded-xl items-center"
               onPress={handleWechatLogin} 
               disabled={loading}
             >
-              <Text className="text-white text-base font-semibold">
+              <Image source={{uri: getCdnImageUrl('wechat_login_202507311529.png')}} className='w-[36px] h-[36px] bg-[#fff] rounded-full'/>
+              {/* <Text className="text-white text-base font-semibold">
                 {loading ? '登录中...' : '微信登录'}
-              </Text>
+              </Text> */}
             </TouchableOpacity>
           </View>
           
