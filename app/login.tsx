@@ -1,16 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { StyleSheet, TextInput, Alert, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
 
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useAuth } from '@/store/AuthContext';
+import { sendVCode } from '@/api/login';
 
 export default function LoginScreen() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [loading, setLoading] = useState(false);
+  const [countdown, setCountdown] = useState(0);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
   const { login } = useAuth();
+
+  // 清理定时器
+  useEffect(() => {
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, []);
 
   const handlePhoneLogin = async () => {
     if (!phoneNumber.trim()) {
@@ -53,12 +65,44 @@ export default function LoginScreen() {
       return;
     }
     
+    // 简单的手机号格式验证
+    const phoneRegex = /^1[3-9]\d{9}$/;
+    if (!phoneRegex.test(phoneNumber)) {
+      Alert.alert('错误', '请输入正确的手机号格式');
+      return;
+    }
+    
     try {
-      // TODO: 实现获取验证码逻辑
-      console.log('获取验证码:', phoneNumber);
-      Alert.alert('提示', '验证码已发送到您的手机');
+      setLoading(true);
+      const response = await sendVCode(phoneNumber);
+      
+      if (response.code === 0 || response.code === 200) {
+        Alert.alert('提示', '验证码已发送到您的手机');
+        // 开始倒计时
+        setCountdown(60);
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+        }
+        timerRef.current = setInterval(() => {
+          setCountdown((prev) => {
+            if (prev <= 1) {
+              if (timerRef.current) {
+                clearInterval(timerRef.current);
+                timerRef.current = null;
+              }
+              return 0;
+            }
+            return prev - 1;
+          });
+        }, 1000);
+      } else {
+        Alert.alert('发送失败', response.message || '验证码发送失败，请重试');
+      }
     } catch (error) {
+      console.error('发送验证码错误:', error);
       Alert.alert('发送失败', '验证码发送失败，请重试');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -93,8 +137,14 @@ export default function LoginScreen() {
             keyboardType="number-pad"
             maxLength={6}
           />
-          <TouchableOpacity style={styles.getCodeButton} onPress={handleGetVerificationCode}>
-            <ThemedText style={styles.getCodeButtonText}>获取验证码</ThemedText>
+          <TouchableOpacity 
+            style={[styles.getCodeButton, (countdown > 0 || loading) && styles.getCodeButtonDisabled]} 
+            onPress={handleGetVerificationCode}
+            disabled={countdown > 0 || loading}
+          >
+            <ThemedText style={[styles.getCodeButtonText, (countdown > 0 || loading) && styles.getCodeButtonTextDisabled]}>
+              {countdown > 0 ? `${countdown}s` : loading ? '发送中...' : '获取验证码'}
+            </ThemedText>
           </TouchableOpacity>
         </ThemedView>
         
@@ -185,6 +235,13 @@ const styles = StyleSheet.create({
     color: '#007AFF',
     fontSize: 14,
     fontWeight: '600',
+  },
+  getCodeButtonDisabled: {
+    backgroundColor: '#f5f5f5',
+    borderColor: '#ddd',
+  },
+  getCodeButtonTextDisabled: {
+    color: '#999',
   },
   buttonContainer: {
     width: '100%',
