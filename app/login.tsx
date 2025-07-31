@@ -103,7 +103,7 @@ export default function LoginScreen() {
           showToast('服务器返回数据异常');
         }
       } else {
-        showToast(response.message || '登录失败，请重试');
+        showToast(response.msg || '登录失败，请重试');
       }
     } catch (error) {
       console.error('登录错误:', error);
@@ -143,7 +143,7 @@ export default function LoginScreen() {
         showToast('验证码已发送到您的手机');
         startCountdown();
       } else {
-        showToast(response.message || '验证码发送失败，请重试');
+        showToast(response.msg || '验证码发送失败，请重试');
       }
     } catch (error) {
       console.error('发送验证码错误:', error);

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 // 服务器配置
 export const SERVERS = {
@@ -9,7 +9,7 @@ export const SERVERS = {
 interface ApiResponse<T = any> {
   data: T;
   status: number;
-  message?: string;
+  msg?: string;
 }
 
 interface UseApiOptions {

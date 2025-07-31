@@ -8,7 +8,7 @@ export interface SendVCodeRequest {
 
 export interface SendVCodeResponse {
   code: number;
-  message: string;
+  msg: string;
   data?: any;
 }
 
@@ -21,7 +21,7 @@ export interface PhoneLoginRequest {
 
 export interface PhoneLoginResponse {
   code: number;
-  message: string;
+  msg: string;
   data?: any;
 }
 
