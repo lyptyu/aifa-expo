@@ -1,12 +1,18 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet, ScrollView } from 'react-native';
 
 import { HelloWave } from '@/components/HelloWave';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
+import { useWebVersion } from '@/hooks/useApi';
+import { useAuth } from '@/store/AuthContext';
 
 export default function HomeScreen() {
+  const { uguid, logout } = useAuth();
+  // 调用API获取版本信息
+  const { data, loading, error } = useWebVersion(uguid || '');
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -19,6 +25,15 @@ export default function HomeScreen() {
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Welcome!</ThemedText>
         <HelloWave />
+      </ThemedView>
+      
+      {/* 用户信息和退出按钮 */}
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">用户信息</ThemedText>
+        <ThemedText>当前UGUID: {uguid}</ThemedText>
+        <ThemedView style={styles.logoutButton} onTouchEnd={logout}>
+          <ThemedText style={styles.logoutButtonText}>退出登录</ThemedText>
+        </ThemedView>
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Step 1: Try it</ThemedText>
@@ -51,6 +66,20 @@ export default function HomeScreen() {
           <ThemedText type="defaultSemiBold">app-example</ThemedText>.
         </ThemedText>
       </ThemedView>
+      
+      {/* API响应数据显示区域 */}
+      <ThemedView style={styles.stepContainer}>
+        <ThemedText type="subtitle">API响应数据</ThemedText>
+        {loading && <ThemedText>加载中...</ThemedText>}
+        {error && <ThemedText style={styles.errorText}>错误: {error}</ThemedText>}
+        {data && (
+          <ScrollView style={styles.dataContainer}>
+            <ThemedText style={styles.dataText}>
+              {JSON.stringify(data, null, 2)}
+            </ThemedText>
+          </ScrollView>
+        )}
+      </ThemedView>
     </ParallaxScrollView>
   );
 }
@@ -71,5 +100,31 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     position: 'absolute',
+  },
+  dataContainer: {
+    maxHeight: 200,
+    backgroundColor: '#f5f5f5',
+    padding: 10,
+    borderRadius: 8,
+    marginTop: 8,
+  },
+  dataText: {
+    fontFamily: 'monospace',
+    fontSize: 12,
+    lineHeight: 16,
+  },
+  errorText: {
+    color: '#ff4444',
+  },
+  logoutButton: {
+    backgroundColor: '#ff4444',
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  logoutButtonText: {
+    color: '#fff',
+    fontWeight: '600',
   },
 });
