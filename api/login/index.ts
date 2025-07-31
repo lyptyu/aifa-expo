@@ -11,6 +11,12 @@ export interface SendVCodeResponse {
   message: string;
   data?: any;
 }
+function S4 () {
+  return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1)
+}
+function guid () {
+    return S4() + S4() + S4() + S4() + S4() + S4() + S4() + S4()
+  }
 
 // 发送验证码
 export const sendVCode = async (Phone: string): Promise<SendVCodeResponse> => {
@@ -26,7 +32,7 @@ export const sendVCode = async (Phone: string): Promise<SendVCodeResponse> => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ Phone,clientid:'143bc4ca2b7bf1c11aeba97d8a1f810a' }),
+      body: JSON.stringify({ Phone,clientid:guid() }),
     });
 
     if (!response.ok) {
