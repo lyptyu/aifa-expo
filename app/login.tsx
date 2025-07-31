@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { StyleSheet, TextInput, Alert, KeyboardAvoidingView, Platform, TouchableOpacity } from 'react-native';
 import { router } from 'expo-router';
+import React, { useEffect, useRef, useState } from 'react';
+import { Alert, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 
+import { phoneLogin, sendVCode } from '@/api/login';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useAuth } from '@/store/AuthContext';
-import { sendVCode, phoneLogin } from '@/api/login';
 
 export default function LoginScreen() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -48,10 +48,16 @@ export default function LoginScreen() {
       // 打印登录结果
       console.log('手机号登录结果:', response);
       
-      if (response.code === 0 || response.code === 200) {
-        Alert.alert('登录成功', '欢迎使用AIFA!');
-        // TODO: 处理登录成功后的逻辑，如保存用户信息、跳转页面等
-        // login(response.data); // 如果需要保存用户信息到AuthContext
+      if (response.code === 1000) {
+        // 保存uguid到store
+        if (response.data && response.data.uguid) {
+          await login(response.data.uguid);
+          Alert.alert('登录成功', '欢迎使用AIFA!');
+          // 跳转到首页
+          router.replace('/(tabs)');
+        } else {
+          Alert.alert('登录失败', '服务器返回数据异常');
+        }
       } else {
         Alert.alert('登录失败', response.message || '登录失败，请重试');
       }
