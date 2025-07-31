@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/aifaicon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.lyptyu.aifaexpo"
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +38,12 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "0d4a74ab-d32b-4270-b007-4e4c9a2a2b53"
+      }
     }
   }
 }
