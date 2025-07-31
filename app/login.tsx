@@ -5,7 +5,7 @@ import { router } from 'expo-router';
 import { ThemedText } from '@/components/ThemedText';
 import { ThemedView } from '@/components/ThemedView';
 import { useAuth } from '@/store/AuthContext';
-import { sendVCode } from '@/api/login';
+import { sendVCode, phoneLogin } from '@/api/login';
 
 export default function LoginScreen() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -34,12 +34,29 @@ export default function LoginScreen() {
       return;
     }
 
+    // 简单的手机号格式验证
+    const phoneRegex = /^1[3-9]\d{9}$/;
+    if (!phoneRegex.test(phoneNumber)) {
+      Alert.alert('错误', '请输入正确的手机号格式');
+      return;
+    }
+
     setLoading(true);
     try {
-      // TODO: 实现手机号登录逻辑
-      console.log('手机号登录:', phoneNumber, verificationCode);
-      Alert.alert('提示', '手机号登录功能待实现');
+      const response = await phoneLogin('', phoneNumber, verificationCode);
+      
+      // 打印登录结果
+      console.log('手机号登录结果:', response);
+      
+      if (response.code === 0 || response.code === 200) {
+        Alert.alert('登录成功', '欢迎使用AIFA!');
+        // TODO: 处理登录成功后的逻辑，如保存用户信息、跳转页面等
+        // login(response.data); // 如果需要保存用户信息到AuthContext
+      } else {
+        Alert.alert('登录失败', response.message || '登录失败，请重试');
+      }
     } catch (error) {
+      console.error('登录错误:', error);
       Alert.alert('登录失败', '登录时出错，请重试');
     } finally {
       setLoading(false);
