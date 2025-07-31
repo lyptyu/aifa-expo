@@ -214,7 +214,8 @@ export default function LoginScreen() {
              >
                <LinearGradient
                  colors={loading ? ['#9CA3AF', '#9CA3AF'] : ['#3B82F6', '#8B5CF6']}
-                 className="w-full py-4 rounded-xl items-center mb-4"
+                 className="w-full py-4 items-center mb-4"
+                 style={{borderRadius:8}}
                >
                  <Text className="text-white text-base font-semibold">
                    {loading ? '登录中...' : '立即登录'}
