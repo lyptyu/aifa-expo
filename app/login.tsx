@@ -236,7 +236,7 @@ export default function LoginScreen() {
               onPress={handleWechatLogin} 
               disabled={loading}
             >
-              <Image source={{uri: getCdnImageUrl('wechat_login_202507311529.png')}} className='w-[36px] h-[36px] bg-[#fff] rounded-full'/>
+              <Image source={{uri: getCdnImageUrl('wechat_login_202507311538.png')}} className='w-[36px] h-[36px] rounded-full'/>
               {/* <Text className="text-white text-base font-semibold">
                 {loading ? '登录中...' : '微信登录'}
               </Text> */}
