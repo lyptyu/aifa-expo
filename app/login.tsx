@@ -1,11 +1,11 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, KeyboardAvoidingView, Platform, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import { Alert, Image, KeyboardAvoidingView, Platform, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 import { phoneLogin, sendVCode } from '@/api/login';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
 import { useAuth } from '@/store/AuthContext';
+import '../css/global.css';
 
 export default function LoginScreen() {
   const [phoneNumber, setPhoneNumber] = useState('');
@@ -131,175 +131,124 @@ export default function LoginScreen() {
 
   return (
     <KeyboardAvoidingView 
-      style={styles.container} 
+      className="flex-1" 
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
-      <ThemedView style={styles.content}>
-        <ThemedText type="title" style={styles.title}>欢迎使用 AIFA</ThemedText>
-        <ThemedText style={styles.subtitle}>请输入手机号和验证码登录</ThemedText>
-        
-        <TextInput
-          style={styles.input}
-          placeholder="请输入手机号"
-          value={phoneNumber}
-          onChangeText={setPhoneNumber}
-          autoCapitalize="none"
-          autoCorrect={false}
-          keyboardType="phone-pad"
-          maxLength={11}
-        />
-        
-        <ThemedView style={styles.verificationContainer}>
-          <TextInput
-            style={[styles.input, styles.verificationInput]}
-            placeholder="请输入验证码"
-            value={verificationCode}
-            onChangeText={setVerificationCode}
-            autoCapitalize="none"
-            autoCorrect={false}
-            keyboardType="number-pad"
-            maxLength={6}
-          />
-          <TouchableOpacity 
-            style={[styles.getCodeButton, (countdown > 0 || loading) && styles.getCodeButtonDisabled]} 
-            onPress={handleGetVerificationCode}
-            disabled={countdown > 0 || loading}
-          >
-            <ThemedText style={[styles.getCodeButtonText, (countdown > 0 || loading) && styles.getCodeButtonTextDisabled]}>
-              {countdown > 0 ? `${countdown}s` : loading ? '发送中...' : '获取验证码'}
-            </ThemedText>
-          </TouchableOpacity>
-        </ThemedView>
-        
-        <ThemedView style={styles.buttonContainer}>
-          <TouchableOpacity style={styles.button} onPress={handlePhoneLogin} disabled={loading}>
-            <ThemedText style={styles.buttonText}>
-              {loading ? '登录中...' : '手机号登录'}
-            </ThemedText>
-          </TouchableOpacity>
+      <LinearGradient
+        colors={['#667eea', '#764ba2']}
+        className="flex-1"
+      >
+        <View className="flex-1 justify-center items-center px-6">
+          {/* Logo区域 */}
+          <View className="items-center">
+            <Image 
+              source={require('../assets/images/aifaicon.png')}
+              style={{width: 120, height: 120}}
+              className="mb-4"
+              resizeMode="contain"
+            />
+          </View>
+
+          {/* 登录卡片 */}
+          <View className="w-full">
+            <Text className="text-white text-2xl font-bold text-center mb-2">登录Aifa</Text>
+            
+            {/* 手机号输入 */}
+             <View className="mb-4">
+               <Text className="text-white/90 text-sm font-medium mb-2">手机号</Text>
+               <TextInput
+                 className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-4 text-base text-white"
+                 placeholder="请输入手机号"
+                 placeholderTextColor="rgba(255,255,255,0.6)"
+                 value={phoneNumber}
+                 onChangeText={setPhoneNumber}
+                 autoCapitalize="none"
+                 autoCorrect={false}
+                 keyboardType="phone-pad"
+                 maxLength={11}
+               />
+             </View>
+             
+             {/* 验证码输入 */}
+              <View className="mb-6">
+                <Text className="text-white/90 text-sm font-medium mb-2">验证码</Text>
+                <View className="w-full flex-row gap-3">
+                  <View className="flex-1">
+                    <TextInput
+                      className="w-full bg-white/20 border border-white/30 rounded-xl px-4 py-4 text-base text-white"
+                      placeholder="请输入验证码"
+                      placeholderTextColor="rgba(255,255,255,0.6)"
+                      value={verificationCode}
+                      onChangeText={setVerificationCode}
+                      autoCapitalize="none"
+                      autoCorrect={false}
+                      keyboardType="number-pad"
+                      maxLength={6}
+                    />
+                  </View>
+                  <TouchableOpacity 
+                    className={`px-4 py-4 rounded-xl border w-[100px] items-center justify-center ${
+                      countdown > 0 || loading 
+                        ? 'bg-white/10 border-white/20' 
+                        : 'bg-white/20 border-white/40'
+                    }`}
+                    onPress={handleGetVerificationCode}
+                    disabled={countdown > 0 || loading}
+                  >
+                    <Text className={`text-xs font-medium text-center ${
+                      countdown > 0 || loading 
+                        ? 'text-white/50' 
+                        : 'text-white'
+                    }`}>
+                      {countdown > 0 ? `${countdown}s` : loading ? '发送中' : '获取验证码'}
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            
+            {/* 登录按钮 */}
+             <TouchableOpacity 
+               onPress={handlePhoneLogin} 
+               disabled={loading}
+             >
+               <LinearGradient
+                 colors={loading ? ['#9CA3AF', '#9CA3AF'] : ['#3B82F6', '#8B5CF6']}
+                 className="w-full py-4 rounded-xl items-center mb-4"
+               >
+                 <Text className="text-white text-base font-semibold">
+                   {loading ? '登录中...' : '立即登录'}
+                 </Text>
+               </LinearGradient>
+             </TouchableOpacity>
+            
+            {/* 分割线 */}
+             <View className="flex-row items-center my-6">
+               <View className="flex-1 h-px bg-white/30" />
+               <Text className="px-4 text-white/60 text-sm">第三方登录</Text>
+               <View className="flex-1 h-px bg-white/30" />
+             </View>
+            
+            {/* 微信登录 */}
+            <TouchableOpacity 
+              className="w-full bg-green-500 py-4 rounded-xl items-center"
+              onPress={handleWechatLogin} 
+              disabled={loading}
+            >
+              <Text className="text-white text-base font-semibold">
+                {loading ? '登录中...' : '微信登录'}
+              </Text>
+            </TouchableOpacity>
+          </View>
           
-          <TouchableOpacity style={[styles.button, styles.wechatButton]} onPress={handleWechatLogin} disabled={loading}>
-            <ThemedText style={styles.buttonText}>
-              {loading ? '登录中...' : '微信登录'}
-            </ThemedText>
-          </TouchableOpacity>
-        </ThemedView>
-        
-        <ThemedText style={styles.note}>
-          登录即表示您同意我们的服务条款和隐私政策
-        </ThemedText>
-      </ThemedView>
+          {/* 底部协议 */}
+          <Text className="text-white/60 text-xs text-center mt-8 leading-5">
+            登录即表示您同意我们的
+            <Text className="text-white/80 underline">服务条款</Text>
+            和
+            <Text className="text-white/80 underline">隐私政策</Text>
+          </Text>
+        </View>
+      </LinearGradient>
     </KeyboardAvoidingView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f8f9fa',
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 30,
-  },
-  title: {
-    marginBottom: 15,
-    textAlign: 'center',
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#1a1a1a',
-  },
-  subtitle: {
-    marginBottom: 40,
-    textAlign: 'center',
-    opacity: 0.7,
-    fontSize: 16,
-    color: '#666',
-  },
-  input: {
-    width: '100%',
-    borderWidth: 1,
-    borderColor: '#e1e5e9',
-    borderRadius: 12,
-    padding: 18,
-    marginBottom: 20,
-    fontSize: 16,
-    backgroundColor: '#fff',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  verificationContainer: {
-    flexDirection: 'row',
-    width: '100%',
-    alignItems: 'center',
-    gap: 12,
-  },
-  verificationInput: {
-    flex: 1,
-    marginBottom: 0,
-  },
-  getCodeButton: {
-    backgroundColor: '#f0f0f0',
-    paddingHorizontal: 16,
-    paddingVertical: 18,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#e1e5e9',
-  },
-  getCodeButtonText: {
-    color: '#007AFF',
-    fontSize: 14,
-    fontWeight: '600',
-  },
-  getCodeButtonDisabled: {
-    backgroundColor: '#f5f5f5',
-    borderColor: '#ddd',
-  },
-  getCodeButtonTextDisabled: {
-    color: '#999',
-  },
-  buttonContainer: {
-    width: '100%',
-    gap: 16,
-    marginTop: 20,
-  },
-  button: {
-    backgroundColor: '#007AFF',
-    padding: 18,
-    borderRadius: 12,
-    alignItems: 'center',
-    shadowColor: '#007AFF',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 4.65,
-    elevation: 8,
-  },
-  wechatButton: {
-    backgroundColor: '#1AAD19',
-    shadowColor: '#1AAD19',
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: '700',
-  },
-  note: {
-    marginTop: 40,
-    textAlign: 'center',
-    fontSize: 12,
-    opacity: 0.6,
-    color: '#999',
-    lineHeight: 18,
-  },
-});
