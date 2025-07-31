@@ -76,9 +76,9 @@ export default function LoginScreen() {
     try {
       // TODO: 实现微信登录逻辑
       console.log('微信登录');
-      showToast('微信登录功能待实现');  
+      showToast('微信登录功能待实现');
     } catch (error) {
-      showToast('微信登录失败');
+      console.error('微信登录错误:', error);
     } finally {
       setLoading(false);
     }

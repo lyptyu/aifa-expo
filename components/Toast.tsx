@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Animated, Dimensions, Text, View } from 'react-native';
-
+import { useEffectEvent } from 'use-effect-event';
 interface ToastProps {
   message: string;
   visible: boolean;
@@ -13,7 +13,9 @@ const { width } = Dimensions.get('window');
 export function Toast({ message, visible, duration = 3000, onHide }: ToastProps) {
   const [fadeAnim] = useState(new Animated.Value(0));
   const [isShowing, setIsShowing] = useState(false);
-
+  const onToastHide = useEffectEvent(()=>{
+    onHide();
+  })
   useEffect(() => {
     if (visible) {
       setIsShowing(true);
@@ -32,13 +34,13 @@ export function Toast({ message, visible, duration = 3000, onHide }: ToastProps)
           useNativeDriver: true,
         }).start(() => {
           setIsShowing(false);
-          onHide();
+          onToastHide()
         });
       }, duration);
 
       return () => clearTimeout(timer);
     }
-  }, [visible, fadeAnim, duration, onHide]);
+  }, [visible, fadeAnim, duration]);
 
   if (!isShowing) {
     return null;
