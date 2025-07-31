@@ -12,15 +12,16 @@ export default function HomeScreen() {
     <View>
       <View>
         <Text>当前UGUID: {uguid}</Text>
-        <View>
-          <View onTouchEnd={() => {
-            logout();
-          }}>退出登录</View>
-        </View>
+        
       </View>
       <View>
         <Text>API响应数据:{data}</Text>
       </View>
+      <View>
+          <Text onPress={() => {
+            logout();
+          }}>退出登录</Text>
+        </View>
     </View>
   );
 }

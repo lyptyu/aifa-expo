@@ -99,7 +99,7 @@ export default function LoginScreen() {
       setLoading(true);
       const response = await sendVCode(phoneNumber);
       
-      if (response.code === 0 || response.code === 200) {
+      if (response.code === 1000) {
         Alert.alert('提示', '验证码已发送到您的手机');
         // 开始倒计时
         setCountdown(60);
