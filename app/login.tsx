@@ -2,6 +2,7 @@ import { phoneLogin, sendVCode } from '@/api/auth';
 import { useAuth } from '@/store/AuthContext';
 import { useToast } from '@/store/ToastContext';
 import { getCdnImageUrl } from '@/utils/utils';
+import Logo from '@/components/Logo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
@@ -165,14 +166,7 @@ export default function LoginScreen() {
       >
         <View className="flex-1 justify-center items-center px-6">
           {/* Logo区域 */}
-          <View className="items-center">
-            <Image 
-              source={require('../assets/images/aifaicon.png')}
-              style={{width: 120, height: 120}}
-              className="mb-4"
-              resizeMode="contain"
-            />
-          </View>
+          <Logo width={120} height={120} className="mb-4" />
 
           {/* 登录卡片 */}
           <View className="w-full">
