@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useAuth } from '@/store/AuthContext';
 
 // 服务器配置
 export const SERVERS = {
@@ -64,4 +65,15 @@ export function useApi<T = any>(url: string, options: UseApiOptions = { immediat
 export function useWebVersion(uguid: string) {
   const url = `${SERVERS.AICHAT_SERVER}/auth/webversion?env=test&uguid=${uguid}`;
   return useApi(url);
+}
+
+// 获取认证参数的hook
+export function useAuthParams(): { uguid?: string; clientid: string } | { clientid: string } {
+  const { uguid, clientid } = useAuth();
+  
+  if (uguid && clientid) {
+    return { uguid, clientid };
+  } else {
+    return { clientid: clientid || '' };
+  }
 }
