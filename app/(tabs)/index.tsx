@@ -1,7 +1,7 @@
-import { useWebVersion, useAuthParams } from '@/hooks/useApi';
+import { useAuthParams, useWebVersion } from '@/hooks/useApi';
 import { useAuth } from '@/store/AuthContext';
+import { router } from 'expo-router';
 import { Text, View } from 'react-native';
-
 
 export default function HomeScreen() {
   const { uguid, clientid, logout } = useAuth();
@@ -12,18 +12,22 @@ export default function HomeScreen() {
   return (
     <View>
       <View>
-        <Text>当前UGUID: {uguid || '未登录'}</Text>
-        <Text>当前ClientID: {clientid}</Text>
         <Text>认证参数: {JSON.stringify(authParams)}</Text>
       </View>
       <View>
         <Text>API响应数据:{data}</Text>
       </View>
       <View>
+        {uguid ? (
           <Text onPress={() => {
             logout();
           }}>退出登录</Text>
-        </View>
+        ) : (
+          <Text onPress={() => {
+            router.push('/login');
+          }}>请先登录</Text>
+        )}
+      </View>
     </View>
   );
 }
