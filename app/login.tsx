@@ -1,4 +1,4 @@
-import { phoneLogin, sendVCode } from '@/api/login';
+import { phoneLogin, sendVCode } from '@/api/auth';
 import { useAuth } from '@/store/AuthContext';
 import { useToast } from '@/store/ToastContext';
 import { getCdnImageUrl } from '@/utils/utils';
@@ -42,7 +42,7 @@ export default function LoginScreen() {
   const [codeLoading, setCodeLoading] = useState(false);
   const [countdown, setCountdown] = useState(0);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const { login } = useAuth();
+  const { login, clientid } = useAuth();
   const { showToast } = useToast();
 
   // 倒计时逻辑
@@ -138,7 +138,7 @@ export default function LoginScreen() {
     
     setCodeLoading(true);
     try {
-      const response = await sendVCode(phoneNumber);
+      const response = await sendVCode(phoneNumber, clientid || '');
       
       if (response.code === CONSTANTS.SUCCESS_CODE) {
         showToast('验证码已发送到您的手机');

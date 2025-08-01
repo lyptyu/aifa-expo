@@ -1,5 +1,4 @@
-import React, { useEffect } from 'react';
-import { router } from 'expo-router';
+import React from 'react';
 import { ActivityIndicator } from 'react-native';
 
 import { useAuth } from '@/store/AuthContext';
@@ -11,27 +10,13 @@ interface AuthGuardProps {
 }
 
 export function AuthGuard({ children }: AuthGuardProps) {
-  const { isAuthenticated, loading } = useAuth();
-
-  useEffect(() => {
-    if (!loading && !isAuthenticated) {
-      router.replace('/login');
-    }
-  }, [isAuthenticated, loading]);
+  const { loading } = useAuth();
 
   if (loading) {
     return (
       <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" color="#007AFF" />
         <ThemedText style={{ marginTop: 10 }}>加载中...</ThemedText>
-      </ThemedView>
-    );
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <ThemedView style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ThemedText>正在跳转到登录页面...</ThemedText>
       </ThemedView>
     );
   }

@@ -1,5 +1,4 @@
 import { SERVERS } from '@/hooks/useApi';
-import { guid } from '@/utils/utils';
 import { Platform } from 'react-native';
 
 // 发送验证码接口
@@ -27,22 +26,20 @@ export interface PhoneLoginResponse {
 }
 
 // 发送验证码
-export const sendVCode = async (Phone: string): Promise<SendVCodeResponse> => {
+export const sendVCode = async (Phone: string, clientid: string): Promise<SendVCodeResponse> => {
   try {
     // 根据平台选择不同的请求地址
     let apiUrl = `${SERVERS.PHPSERVER}auth/SendVCode`;
     if (__DEV__ && Platform.OS === 'web') {
       apiUrl = '/api/mapi/auth/SendVCode'; // Web端使用代理路径
     }
-    const clientid = '143bc4ca2b7bf1c11aeba97d8a1f810a'
 
     const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-
-      body: JSON.stringify({ Phone, clientid: guid()}),
+      body: JSON.stringify({ Phone, clientid }),
     });
 
     if (!response.ok) {

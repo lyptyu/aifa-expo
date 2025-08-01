@@ -4,15 +4,15 @@ import { Text, View } from 'react-native';
 
 
 export default function HomeScreen() {
-  const { uguid, logout } = useAuth();
-  // 调用API获取版本信息
-  const { data } = useWebVersion(uguid || '');
+  const { uguid, clientid, logout } = useAuth();
+  // 调用API获取版本信息，优先使用uguid，如果没有则使用clientid
+  const { data } = useWebVersion(uguid || clientid || '');
 
   return (
     <View>
       <View>
-        <Text>当前UGUID: {uguid}</Text>
-        
+        <Text>当前UGUID: {uguid || '未登录'}</Text>
+        <Text>当前ClientID: {clientid}</Text>
       </View>
       <View>
         <Text>API响应数据:{data}</Text>
