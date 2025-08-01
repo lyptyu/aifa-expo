@@ -1,4 +1,4 @@
-import { clientCheckV3 } from '@/api/auth/clientCheck';
+import { clientCheckV3 } from '@/api/auth';
 import { guid } from '@/utils/utils';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';

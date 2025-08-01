@@ -20,7 +20,7 @@ export const clientCheckV3 = async (clientid?: string): Promise<ClientCheckV3Res
     let authParams;
     if (clientid) {
       // 如果传入了clientid参数，直接使用
-      authParams = { clientid };
+      authParams = { ClientId: clientid };
     } else {
       // 否则从存储中获取认证参数
       authParams = await getAuthParams();

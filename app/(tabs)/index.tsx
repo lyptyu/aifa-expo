@@ -15,7 +15,7 @@ export default function HomeScreen() {
         <Text>认证参数: {JSON.stringify(authParams)}</Text>
       </View>
       <View>
-        <Text>API响应数据:{data}</Text>
+        <Text>API响应数据:{JSON.stringify(data)}</Text>
       </View>
       <View>
         {uguid ? (
