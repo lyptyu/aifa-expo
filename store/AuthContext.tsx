@@ -40,7 +40,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         
         // 调用ClientCheckV3接口初始化
         try {
-          await clientCheckV3(storedClientid);
+          await clientCheckV3();
           console.log('ClientCheckV3初始化成功');
         } catch (error) {
           console.error('ClientCheckV3初始化失败:', error);

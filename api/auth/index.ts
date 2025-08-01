@@ -1,5 +1,6 @@
 import { SERVERS } from '@/hooks/useApi';
 import { Platform } from 'react-native';
+import { getAuthParams } from '@/utils/utils';
 
 // 发送验证码接口
 export interface SendVCodeRequest {
@@ -26,8 +27,11 @@ export interface PhoneLoginResponse {
 }
 
 // 发送验证码
-export const sendVCode = async (Phone: string, clientid: string): Promise<SendVCodeResponse> => {
+export const sendVCode = async (Phone: string): Promise<SendVCodeResponse> => {
   try {
+    // 获取认证参数
+    const authParams = await getAuthParams();
+    
     // 根据平台选择不同的请求地址
     let apiUrl = `${SERVERS.PHPSERVER}auth/SendVCode`;
     if (__DEV__ && Platform.OS === 'web') {
@@ -39,7 +43,7 @@ export const sendVCode = async (Phone: string, clientid: string): Promise<SendVC
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ Phone, clientid }),
+      body: JSON.stringify({ Phone, ...authParams }),
     });
 
     if (!response.ok) {
@@ -57,6 +61,9 @@ export const sendVCode = async (Phone: string, clientid: string): Promise<SendVC
 // 手机号登录
 export const phoneLogin = async (iv: string, phone: string, vcode: string): Promise<PhoneLoginResponse> => {
   try {
+    // 获取认证参数
+    const authParams = await getAuthParams();
+    
     // 根据平台选择不同的请求地址
     let apiUrl = `${SERVERS.PHPSERVER}auth/PhoneLogin`;
     if (__DEV__ && Platform.OS === 'web') {
@@ -68,7 +75,7 @@ export const phoneLogin = async (iv: string, phone: string, vcode: string): Prom
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ iv, phone, vcode }),
+      body: JSON.stringify({ iv, phone, vcode, ...authParams }),
     });
 
     if (!response.ok) {

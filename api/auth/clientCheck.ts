@@ -1,5 +1,6 @@
 import { SERVERS } from '@/hooks/useApi';
 import { Platform } from 'react-native';
+import { getAuthParams } from '@/utils/utils';
 
 // ClientCheckV3接口请求参数
 export interface ClientCheckV3Request {
@@ -14,8 +15,11 @@ export interface ClientCheckV3Response {
 }
 
 // ClientCheckV3接口
-export const clientCheckV3 = async (clientid: string): Promise<ClientCheckV3Response> => {
+export const clientCheckV3 = async (): Promise<ClientCheckV3Response> => {
   try {
+    // 获取认证参数
+    const authParams = await getAuthParams();
+    
     // 根据平台选择不同的请求地址
     let apiUrl = `${SERVERS.AICHAT_SERVER}/auth/ClientCheckV3`;
     if (__DEV__ && Platform.OS === 'web') {
@@ -27,7 +31,7 @@ export const clientCheckV3 = async (clientid: string): Promise<ClientCheckV3Resp
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ clientid }),
+      body: JSON.stringify(authParams),
     });
 
     if (!response.ok) {

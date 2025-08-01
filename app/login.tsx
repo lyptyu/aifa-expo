@@ -138,7 +138,7 @@ export default function LoginScreen() {
     
     setCodeLoading(true);
     try {
-      const response = await sendVCode(phoneNumber, clientid || '');
+      const response = await sendVCode(phoneNumber);
       
       if (response.code === CONSTANTS.SUCCESS_CODE) {
         showToast('验证码已发送到您的手机');
