@@ -1,8 +1,8 @@
 import { phoneLogin, sendVCode } from '@/api/auth';
+import Logo from '@/components/Logo';
 import { useAuth } from '@/store/AuthContext';
 import { useToast } from '@/store/ToastContext';
 import { getCdnImageUrl } from '@/utils/utils';
-import Logo from '@/components/Logo';
 import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';

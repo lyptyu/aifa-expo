@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { guid } from '@/utils/utils';
 import { clientCheckV3 } from '@/api/auth/clientCheck';
+import { guid } from '@/utils/utils';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, ReactNode, useContext, useEffect, useState } from 'react';
 
 interface AuthContextType {
   uguid: string | null;
@@ -33,17 +33,29 @@ export function AuthProvider({ children }: AuthProviderProps) {
       const storedUguid = await AsyncStorage.getItem('uguid');
       let storedClientid = await AsyncStorage.getItem('clientid');
       
-      // 如果没有clientid，生成一个新的
+      // 如果没有clientid，生成一个新的并验证
       if (!storedClientid) {
-        storedClientid = guid();
-        await AsyncStorage.setItem('clientid', storedClientid);
+        const newClientid = guid();
         
-        // 调用ClientCheckV3接口初始化
+        // 调用ClientCheckV3接口验证新生成的clientid
         try {
-          await clientCheckV3();
-          console.log('ClientCheckV3初始化成功');
+          const checkResult = await clientCheckV3(newClientid);
+          console.log('ClientCheckV3验证结果:', checkResult);
+          
+          // 只有验证成功才存储到store和本地存储
+          if (checkResult.code === 1000) { // 假设1000是成功码
+            await AsyncStorage.setItem('clientid', newClientid);
+            storedClientid = newClientid;
+            console.log('ClientCheckV3验证成功，clientid已存储');
+          } else {
+            console.error('ClientCheckV3验证失败:', checkResult.msg);
+            // 验证失败时不存储clientid
+            storedClientid = null;
+          }
         } catch (error) {
-          console.error('ClientCheckV3初始化失败:', error);
+          console.error('ClientCheckV3验证失败:', error);
+          // 验证失败时不存储clientid
+          storedClientid = null;
         }
       }
       

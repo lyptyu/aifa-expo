@@ -15,10 +15,16 @@ export interface ClientCheckV3Response {
 }
 
 // ClientCheckV3接口
-export const clientCheckV3 = async (): Promise<ClientCheckV3Response> => {
+export const clientCheckV3 = async (clientid?: string): Promise<ClientCheckV3Response> => {
   try {
-    // 获取认证参数
-    const authParams = await getAuthParams();
+    let authParams;
+    if (clientid) {
+      // 如果传入了clientid参数，直接使用
+      authParams = { clientid };
+    } else {
+      // 否则从存储中获取认证参数
+      authParams = await getAuthParams();
+    }
     
     // 根据平台选择不同的请求地址
     let apiUrl = `${SERVERS.AICHAT_SERVER}/auth/ClientCheckV3`;
