@@ -1,6 +1,6 @@
 import { SERVERS } from '@/hooks/useApi';
-import { Platform } from 'react-native';
 import { getAuthParams } from '@/utils/utils';
+import { Platform } from 'react-native';
 
 // 发送验证码接口
 export interface SendVCodeRequest {

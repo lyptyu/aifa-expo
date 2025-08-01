@@ -1,6 +1,6 @@
 import { SERVERS } from '@/hooks/useApi';
-import { Platform } from 'react-native';
 import { getAuthParams } from '@/utils/utils';
+import { Platform } from 'react-native';
 
 // ClientCheckV3接口请求参数
 export interface ClientCheckV3Request {
@@ -29,7 +29,7 @@ export const clientCheckV3 = async (clientid?: string): Promise<ClientCheckV3Res
     // 根据平台选择不同的请求地址
     let apiUrl = `${SERVERS.AICHAT_SERVER}/auth/ClientCheckV3`;
     if (__DEV__ && Platform.OS === 'web') {
-      apiUrl = '/api/aichat/auth/ClientCheckV3'; // Web端使用代理路径
+      apiUrl = '/aichat/auth/ClientCheckV3'; // Web端使用代理路径
     }
 
     const response = await fetch(apiUrl, {
