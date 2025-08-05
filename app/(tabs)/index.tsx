@@ -28,6 +28,11 @@ export default function HomeScreen() {
           }}>请先登录</Text>
         )}
       </View>
+      <View>
+        <Text onPress={() => {
+          router.push('/im');
+        }}>跳转到IM</Text>
+      </View>
     </View>
   );
 }
