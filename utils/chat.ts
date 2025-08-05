@@ -31,6 +31,15 @@ chat.registerPlugin({ 'chat-network-monitor': NetInfo });
 
 // 全局未读消息计数
 let unreadMessageCount = 0;
+let chatContextSetter: ((count: number) => void) | null = null;
+
+/**
+ * 设置ChatContext的setter函数
+ * @param setter ChatContext中的setUnreadMessageCount函数
+ */
+export const setChatContextSetter = (setter: (count: number) => void): void => {
+    chatContextSetter = setter;
+};
 
 /**
  * 获取未读消息数量
@@ -45,6 +54,20 @@ export const getUnreadMessageCount = (): number => {
  */
 export const resetUnreadMessageCount = (): void => {
     unreadMessageCount = 0;
+    if (chatContextSetter) {
+        chatContextSetter(0);
+    }
+};
+
+/**
+ * 更新未读消息数量
+ * @param count 新的未读消息数量
+ */
+const updateUnreadMessageCount = (count: number): void => {
+    unreadMessageCount = count;
+    if (chatContextSetter) {
+        chatContextSetter(count);
+    }
 };
 
 // ==================== 事件监听器 ====================
@@ -75,8 +98,8 @@ const onConversationListUpdated = function(event: any) {
     conversations.forEach((conversation: any) => {
         totalUnread += conversation.unreadCount || 0;
     });
-    unreadMessageCount = totalUnread;
-    console.log('会话列表更新，未读消息数量:', unreadMessageCount);
+    updateUnreadMessageCount(totalUnread);
+    console.log('会话列表更新，未读消息数量:', totalUnread);
 };
 
 // ==================== 注册事件监听器 ====================
@@ -132,6 +155,21 @@ export const chatLogout = (): void => {
     }
 };
 
+
+// ==================== SDK实例导出 ====================
+
+/**
+ * 导出TencentCloudChat实例供其他模块使用
+ */
+export { chat };
+
+/**
+ * 初始化聊天功能
+ * @param setUnreadCount ChatContext中的setUnreadMessageCount函数
+ */
+export const initializeChat = (setUnreadCount: (count: number) => void): void => {
+    setChatContextSetter(setUnreadCount);
+};
 
 // ==================== 自动初始化 ====================
 

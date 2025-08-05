@@ -1,10 +1,12 @@
 import { useAuthParams, useWebVersion } from '@/hooks/useApi';
 import { useAuth } from '@/store/AuthContext';
+import { useChat } from '@/store/ChatContext';
 import { router } from 'expo-router';
 import { Text, View } from 'react-native';
 
 export default function HomeScreen() {
   const { uguid, clientid, logout } = useAuth();
+  const { unreadMessageCount } = useChat();
   const authParams = useAuthParams();
   // 调用API获取版本信息，优先使用uguid，如果没有则使用clientid
   const { data } = useWebVersion(uguid || clientid || '');
@@ -32,6 +34,9 @@ export default function HomeScreen() {
         <Text onPress={() => {
           router.push('/im');
         }}>跳转到IM</Text>
+      </View>
+      <View>
+        <Text>未读消息数量: {unreadMessageCount}</Text>
       </View>
     </View>
   );
