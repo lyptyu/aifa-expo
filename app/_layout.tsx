@@ -24,7 +24,22 @@ export default function RootLayout() {
         <ToastProvider>
           <Stack>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-            <Stack.Screen name="login" options={{ headerShown: false }} />
+            <Stack.Screen name="login" options={{ headerShown: true }} />
+            <Stack.Screen 
+              name="im" 
+              options={{ 
+                title: "消息",
+                headerStyle: {
+                  backgroundColor: '#fff',
+                },
+                headerTintColor: '#000000',
+                headerTitleStyle: {
+                  fontWeight: '600',
+                  fontSize: 18,
+                },
+                headerShadowVisible: false,
+              }} 
+            />
             <Stack.Screen name="+not-found" />
           </Stack>
           <StatusBar style="auto" />
