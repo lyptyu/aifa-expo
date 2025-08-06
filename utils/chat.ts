@@ -1,7 +1,8 @@
 import NetInfo from "@react-native-community/netinfo";
 import TencentCloudChat from "@tencentcloud/chat";
-import Push from "@tencentcloud/react-native-push";
 import TIMUploadPlugin from "tim-upload-plugin";
+import { initPush } from "./push";
+
 // ==================== SDK 配置和初始化 ====================
 
 /**
@@ -136,9 +137,6 @@ export const chatLogin = async (): Promise<void> => {
       console.log("重复登录:", imResponse.data.errorInfo);
     } else {
       console.log("登录成功");
-      Push.setRegistrationID(LOGIN_CONFIG.userID, () => {
-        console.log("推送ID绑定成功", LOGIN_CONFIG.userID);
-      });
     }
   } catch (imError) {
     // 登录失败的相关信息
@@ -181,6 +179,10 @@ export const initializeChat = (
 // ==================== 自动初始化 ====================
 
 // 自动执行登录（可根据需要注释掉）
-chatLogin().catch((error) => {
-  console.error("自动登录失败:", error);
-});
+chatLogin()
+  .then(() => {
+    initPush(LOGIN_CONFIG.userID);
+  })
+  .catch((error) => {
+    console.error("自动登录失败:", error);
+  });

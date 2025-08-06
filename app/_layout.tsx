@@ -6,7 +6,6 @@ import { AuthProvider } from '@/store/AuthContext';
 import { ChatProvider } from '@/store/ChatContext';
 import { ToastProvider } from '@/store/ToastContext';
 import '@/utils/chat';
-import '@/utils/push';
 import '../css/global.css';
 export default function RootLayout() {
   const [loaded] = useFonts({
