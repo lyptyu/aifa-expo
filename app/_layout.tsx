@@ -1,7 +1,6 @@
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
 
 import { AuthProvider } from '@/store/AuthContext';
 import { ChatProvider } from '@/store/ChatContext';
