@@ -89,12 +89,17 @@ android {
 
     namespace 'com.lyptyu.aifaexpo'
     defaultConfig {
-        applicationId 'com.lyptyu.aifaexpo'
+        applicationId 'aifa.apk'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0.0"
         multiDexEnabled true
+        manifestPlaceholders = [
+            "VIVO_APPKEY" : "ca143a68902c6a8848b5e8436269c64f",
+            "VIVO_APPID" : "105947752",
+            "HONOR_APPID" : "" // 如果您的 APP 需要荣耀推送，请配置 'HONOR_APPID'
+        ]
     }
     signingConfigs {
         debug {
@@ -176,4 +181,7 @@ dependencies {
     } else {
         implementation jscFlavor
     }
+    // 推送服务
+    // 推送主包必须要集成
+    implementation 'com.tencent.timpush:vivo:8.5.6864'
 }

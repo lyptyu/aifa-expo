@@ -4,18 +4,16 @@ const SDKAppID = 1600099722; // 您的 SDKAppID
 const appKey = 'w6fm8VcNkPQgnOSXKCWTJ9ZrySvUMAHRhsQaoVrW6PTUaA6B9UCRLos1HmP3HKkg'; // 客户端密钥
 
 if (Push) {
-  // 如果您需要与 Chat 的登录 userID 打通（即向此 userID 推送消息），请使用 setRegistrationID 接口
-  // Push.setRegistrationID(userID, () => {
-      // console.log('setRegistrationID ok', userID);
-  // });
-  
+
+  Push.disablePostNotificationInForeground(false)
+
   Push.registerPush(SDKAppID, appKey, (data) => {
-      console.log('registerPush ok', data);
+      console.warn('registerPush ok', data);
       Push.getRegistrationID((registrationID) => {
-        console.log('getRegistrationID ok', registrationID);
+        console.warn('getRegistrationID ok', registrationID);
       });
     }, (errCode, errMsg) => {
-      console.error('registerPush failed', errCode, errMsg);
+      console.warn('registerPush failed', errCode, errMsg);
     }
   );
   

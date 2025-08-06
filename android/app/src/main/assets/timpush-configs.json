@@ -1,0 +1,11 @@
+{
+  "version": "1.0.1",
+  "aifa.apk": {
+    "manifestPlaceholders": {
+      "VIVO_APPKEY": "ca143a68902c6a8848b5e8436269c64f",
+      "VIVO_APPID": "105947752",
+      "HONOR_APPID": ""
+    },
+    "vivoPushBussinessId": "43053"
+  }
+}
